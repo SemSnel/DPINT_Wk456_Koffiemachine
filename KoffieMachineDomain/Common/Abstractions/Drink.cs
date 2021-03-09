@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KoffieMachineDomain.Common.Interfaces;
 
-namespace KoffieMachineDomain
+namespace KoffieMachineDomain.Common.Abstractions
 {
-    public abstract class Drink
+    public abstract class Drink : IDrink
     {
         public static readonly double SugarPrice = 0.1;
         public static readonly double MilkPrice = 0.15;
