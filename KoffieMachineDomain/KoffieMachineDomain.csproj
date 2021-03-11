@@ -49,7 +49,6 @@
     <Compile Include="Entities\Coffee.cs" />
     <Compile Include="Entities\Espresso.cs" />
     <Compile Include="Entities\WienerMelange.cs" />
-    <Compile Include="Common\Factories\DrinkFactory.cs" />
     <Compile Include="Common\Interfaces\IDrinkFactory.cs" />
     <Compile Include="Common\Interfaces\IDrink.cs" />
     <Compile Include="Common\Abstractions\DrinkBaseDecorator.cs" />
@@ -58,6 +57,11 @@
     <Compile Include="Entities\DrinkDecorators\CoffeeStrengthDecorator.cs" />
     <Compile Include="Entities\DrinkDecorators\CreamingMilkDecorator.cs" />
     <Compile Include="Entities\DrinkDecorators\HalfCoffeeHalfMilkDrinkDecorator.cs" />
+    <Compile Include="Common\Abstractions\DrinkBase.cs" />
+    <Compile Include="Entities\Factories\DrinkFactory.cs" />
+    <Compile Include="Common\Interfaces\IPayment.cs" />
+    <Compile Include="Entities\Payment\CardPayment.cs" />
+    <Compile Include="Entities\Payment\CashPayment.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
@@ -65,8 +69,13 @@
     <Folder Include="Common\Abstractions\" />
     <Folder Include="Enums\" />
     <Folder Include="Entities\" />
-    <Folder Include="Common\Factories\" />
     <Folder Include="Entities\DrinkDecorators\" />
+    <Folder Include="Entities\Factories\" />
+    <Folder Include="Config\" />
+    <Folder Include="Entities\Payment\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\AvailableDrinks.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -9,9 +9,6 @@ namespace KoffieMachineDomain.Common.Abstractions
 {
     public abstract class Drink : IDrink
     {
-        public static readonly double SugarPrice = 0.1;
-        public static readonly double MilkPrice = 0.15;
-
         protected const double BaseDrinkPrice = 1.0;
         
         public abstract string Name { get; }

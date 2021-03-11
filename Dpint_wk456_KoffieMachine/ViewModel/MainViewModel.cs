@@ -11,6 +11,8 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        private readonly IDrinkFactory drinkFactory;
+
         private Dictionary<string, double> _cashOnCards;
         public ObservableCollection<string> LogText { get; private set; }
 
@@ -34,16 +36,12 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
         }
 
         #region Drink properties to bind to
-        private Drink _selectedDrink;
-        public string SelectedDrinkName
-        {
-            get { return _selectedDrink?.Name; }
-        }
+        private IDrink _selectedDrink;
 
-        public double? SelectedDrinkPrice
-        {
-            get { return _selectedDrink?.GetPrice(); }
-        }
+        public string SelectedDrinkName => _selectedDrink?.Name;
+
+        public double? SelectedDrinkPrice => _selectedDrink?.GetPrice();
+
         #endregion Drink properties to bind to
 
         #region Payment
@@ -138,41 +136,29 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
 
         public ICommand DrinkCommand => new RelayCommand<string>((drinkName) =>
         {
-            _selectedDrink = null;
-            switch (drinkName)
+            if (!drinkFactory.AvailableDrinksNames.Contains(drinkName))
             {
-                case "Coffee":
-                    _selectedDrink = new Coffee() { DrinkStrength = CoffeeStrength };
-                    break;
-                case "Espresso":
-                    _selectedDrink = new Espresso();
-                    break;
-                case "Capuccino":
-                    _selectedDrink = new Capuccino();
-                    break;
-                case "Wiener Melange":
-                    _selectedDrink = new WienerMelange();
-                    break;
-                case "Café au Lait":
-                    _selectedDrink = new CafeAuLait();
-                    break;
-                default:
-                    LogText.Add($"Could not make {drinkName}, recipe not found.");
-                    break;
+                LogText.Add($"Could not make {drinkName}, recipe not found.");
+                return;
             }
+                
+            _selectedDrink = drinkFactory.GetDrink(drinkName, CoffeeStrength, SugarAmount, MilkAmount);
             
-            if(_selectedDrink != null)
-            {
-                RemainingPriceToPay = _selectedDrink.GetPrice();
-                LogText.Add($"Selected {_selectedDrink.Name}, price: {RemainingPriceToPay.ToString("C", CultureInfo.CurrentCulture)}");
-                RaisePropertyChanged(() => RemainingPriceToPay);
-                RaisePropertyChanged(() => SelectedDrinkName);
-                RaisePropertyChanged(() => SelectedDrinkPrice);
-            }
+            RemainingPriceToPay = _selectedDrink.GetPrice();
+            LogText.Add($"Selected {_selectedDrink.Name}, price: {RemainingPriceToPay.ToString("C", CultureInfo.CurrentCulture)}");
+            RaisePropertyChanged(() => RemainingPriceToPay);
+            RaisePropertyChanged(() => SelectedDrinkName);
         });
 
         public ICommand DrinkWithSugarCommand => new RelayCommand<string>((drinkName) =>
         {
+            if (!drinkFactory.AvailableDrinksNames.Contains(drinkName))
+            {
+                LogText.Add($"Could not make {drinkName}, recipe not found.");
+                return;
+            }
+
+
             _selectedDrink = null;
             RemainingPriceToPay = 0;
             switch (drinkName)
@@ -206,6 +192,12 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
 
         public ICommand DrinkWithMilkCommand => new RelayCommand<string>((drinkName) =>
         {
+            if (!drinkFactory.AvailableDrinksNames.Contains(drinkName))
+            {
+                LogText.Add($"Could not make {drinkName}, recipe not found.");
+                return;
+            }
+
             switch (drinkName)
             {
                 case "Coffee":
@@ -231,6 +223,12 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
 
         public ICommand DrinkWithSugarAndMilkCommand => new RelayCommand<string>((drinkName) =>
         {
+            if (!drinkFactory.AvailableDrinksNames.Contains(drinkName))
+            {
+                LogText.Add($"Could not make {drinkName}, recipe not found.");
+                return;
+            }
+
             _selectedDrink = null;
             RemainingPriceToPay = 0;
             switch (drinkName)

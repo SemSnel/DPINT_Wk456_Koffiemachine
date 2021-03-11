@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using KoffieMachineDomain.Common.Abstractions;
 using KoffieMachineDomain.Common.Interfaces;
 
