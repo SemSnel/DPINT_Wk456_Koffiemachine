@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using KoffieMachineDomain.Common.Interfaces;
 
 namespace KoffieMachineDomain.Entities.Payment
@@ -7,22 +9,43 @@ namespace KoffieMachineDomain.Entities.Payment
     public class CardPayment : IPayment
     {
         private double remainingPriceToPay;
-        private Dictionary<string, double> _cashOnCards;
+        public Dictionary<string, double> CashOnCards { get; }
 
-        public CardPayment()
+        public ObservableCollection<string> _logText;
+
+        public CardPayment(ObservableCollection<string> logText)
         {
-            _cashOnCards = new Dictionary<string, double>();
-            _cashOnCards["Arjen"] = 5.0;
-            _cashOnCards["Bert"] = 3.5;
-            _cashOnCards["Chris"] = 7.0;
-            _cashOnCards["Daan"] = 6.0;
+            _logText = logText;
+
+            CashOnCards = new Dictionary<string, double>();
+            CashOnCards["Arjen"] = 5.0;
+            CashOnCards["Bert"] = 3.5;
+            CashOnCards["Chris"] = 7.0;
+            CashOnCards["Daan"] = 6.0;
+
+            SelectedPaymentCardUserName = CashOnCards.Keys.First();
         }
 
-        public double RemainingPriceToPay { get => remainingPriceToPay; set => remainingPriceToPay = value; }
+        public ICollection<string> PaymentCardUserNames => CashOnCards.Keys;
 
-        public double Pay(double insertedMoney)
+        public string SelectedPaymentCardUserName { get; set; }
+
+        public double Pay(double remainingPriceToPay)
         {
-            throw new NotImplementedException();
+            var insertedMoney = CashOnCards[SelectedPaymentCardUserName];
+
+            if (remainingPriceToPay > insertedMoney)
+            {
+                CashOnCards[SelectedPaymentCardUserName] = 0;
+
+                return remainingPriceToPay -= insertedMoney;
+            }
+
+            CashOnCards[SelectedPaymentCardUserName] -= remainingPriceToPay;
+
+            remainingPriceToPay = 0;
+
+            return remainingPriceToPay;
         }
     }
 }

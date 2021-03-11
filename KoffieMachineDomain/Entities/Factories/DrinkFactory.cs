@@ -14,21 +14,25 @@ namespace KoffieMachineDomain.Common.Factories
         public DrinkFactory()
         {
             _availableDrinks = new Dictionary<string, Func<IDrink>>();
+            AvailableDrinksNames = new List<string>()
+            {
+                "Coffee"
+            };
         }
 
         public Dictionary<string, Func<IDrink>> AvailableDrinks => _availableDrinks;
 
-        public ICollection<string> AvailableDrinksNames => _availableDrinks.Keys;
+        public ICollection<string> AvailableDrinksNames { get; private set; }
 
 
-        public IDrink GetDrink(string name, Strength strength, Amount sugarAmount, Amount milkAmount)
+        public IDrink GetDrink(string name, Strength strength, Amount? sugarAmount = null, Amount? milkAmount = null)
         {
             IDrink drink = null;
 
             switch (name)
             {
                 case "Coffee":
-                    return GetCoffee(strength, sugarAmount, milkAmount);
+                    return GetCoffee(strength);
                 case "Espresso":
                     return GetEspresso();
                 case "Capuccino":
@@ -39,17 +43,30 @@ namespace KoffieMachineDomain.Common.Factories
                     return CafeAuLait();
             }
 
+            if (milkAmount != null)
+            {
+                drink = AddMilk(drink, (Amount)milkAmount);
+            }
+
+            if (sugarAmount != null)
+            {
+                drink = AddSugar(drink, (Amount) sugarAmount);
+            }
+            
+
             return drink;
         }
 
         #region Make Drink Methods
-        public IDrink GetCoffee(Strength strength, Amount sugarAmount, Amount milkAmount)
+        public IDrink GetCoffee(Strength strength)
         {
-            IDrink drink = new DrinkBase();
+            IDrink drink = new DrinkBase()
+            {
+                Name = "Coffee"
+            };
 
             drink = AddCoffee(drink, strength);
-            drink = AddMilk(drink, milkAmount);
-            drink = AddSugar(drink, sugarAmount);
+            
 
             return drink;
         }
@@ -68,6 +85,7 @@ namespace KoffieMachineDomain.Common.Factories
             IDrink drink = new DrinkBase();
 
             drink = new Capuccino();
+
             return drink;
         }
 
@@ -91,7 +109,7 @@ namespace KoffieMachineDomain.Common.Factories
 
         public IDrink AddCoffee(IDrink drink, Strength strength)
         {
-            return new CoffeeStrengthDecorator(drink, strength);
+            return new CoffeeDecorator(drink, strength);
         }
 
         public IDrink AddMilk(IDrink drink, Amount amount)

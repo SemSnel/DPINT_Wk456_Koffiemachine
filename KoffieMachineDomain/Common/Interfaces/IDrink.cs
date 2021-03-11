@@ -9,6 +9,6 @@ namespace KoffieMachineDomain.Common.Interfaces
 
         double GetPrice();
 
-        public void LogDrinkMaking(ICollection<string> log);
+        void LogDrinkMaking(ICollection<string> log);
     }
 }

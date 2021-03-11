@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using KoffieMachineDomain.Enums;
 
 namespace KoffieMachineDomain.Common.Interfaces
 {
     public interface IDrinkFactory
     {
-        public Dictionary<string, Func<IDrink>> AvailableDrinks { get; }
+        Dictionary<string, Func<IDrink>> AvailableDrinks { get; }
 
-        public ICollection<string> AvailableDrinksNames { get; }
+        ICollection<string> AvailableDrinksNames { get; }
+        IDrink GetDrink(string drinkName, Strength coffeeStrength, Amount? sugarAmount, Amount? milkAmount);
     }
 }

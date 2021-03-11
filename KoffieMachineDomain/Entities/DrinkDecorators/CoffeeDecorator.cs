@@ -6,11 +6,11 @@ using KoffieMachineDomain.Enums;
 
 namespace KoffieMachineDomain.Entities.DrinkDecorators
 {
-    public class CoffeeStrengthDecorator : DrinkBaseDecorator
+    public class CoffeeDecorator : DrinkBaseDecorator
     {
         private readonly Strength _strength;
 
-        public CoffeeStrengthDecorator(IDrink baseDecorator, Strength strength) : base(baseDecorator)
+        public CoffeeDecorator(IDrink baseDecorator, Strength strength) : base(baseDecorator)
         {
             _strength = strength;
         }
