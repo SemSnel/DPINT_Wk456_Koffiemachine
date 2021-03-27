@@ -4,18 +4,20 @@ using KoffieMachineDomain.Common.Abstractions;
 using KoffieMachineDomain.Common.Interfaces;
 using KoffieMachineDomain.Config;
 using KoffieMachineDomain.Entities;
+using KoffieMachineDomain.Entities.Adapters;
 using KoffieMachineDomain.Entities.DrinkDecorators;
 using KoffieMachineDomain.Enums;
+using TeaAndChocoLibrary;
 
 namespace KoffieMachineDomain.Common.Factories
 {
     public class DrinkFactory : IDrinkFactory
     {
-        //private TeaBlendRepository _teaBlendRepository;
+        private TeaBlendRepository _teaBlendRepository;
 
-        public DrinkFactory()
+        public DrinkFactory(TeaBlendRepository teaBlendRepository)
         {
-
+            _teaBlendRepository = teaBlendRepository;
         }
 
         public IDrink GetDrink(DrinkOptions options)
@@ -27,14 +29,20 @@ namespace KoffieMachineDomain.Common.Factories
 
             if (IsSpecialCoffee(options.Name))
             {
-                return MakeJSONCoffee(new JsonCoffee(), options.Strength);
+                return MakeJSONCoffee(options);
             }
 
             IDrink drink = new DrinkBase() { Name = options.Name };
 
             if (IsTeaBlend(options.Name))
             {
+                drink = MakeTea(options);
+            }
 
+            if (isHotChocolate(options.Name))
+            {
+                var hotChocolate = new HotChocolate();
+                drink = new HotChocolateAdapter(hotChocolate);
             }
 
             if (IsRegularCoffee(options.Name))
@@ -54,6 +62,7 @@ namespace KoffieMachineDomain.Common.Factories
 
             return drink;
         }
+
 
         private IDrink MakeRegularCoffee(DrinkOptions options)
         {
@@ -84,20 +93,22 @@ namespace KoffieMachineDomain.Common.Factories
             return new CoffeeDecorator(drink, strength);
         }
 
-        private IDrink MakeJSONCoffee(JsonCoffee jsonCoffee, Strength coffeeStrength)
+        private IDrink MakeJSONCoffee(DrinkOptions options)
         {
+            var jsonCoffee = options.JsonCoffee;
             IDrink drink = new DrinkBase() {Name = jsonCoffee.Name};
-            drink = new CoffeeDecorator(drink, coffeeStrength);
+
+            drink = new CoffeeDecorator(drink, options.Strength);
 
             foreach (JsonIngredient ingredient in jsonCoffee.Ingredients)
             {
                 switch (ingredient.Name)
                 {
                     case "Sugar":
-                        drink = new SugarDrinkDecorator(drink, Amount.Normal);
+                        drink = new SugarDrinkDecorator(drink, options.SugarAmount);
                         break;
                     case "Milk":
-                        drink = new MilkDrinkDecorator(drink, Amount.Normal);
+                        drink = new MilkDrinkDecorator(drink, options.MilkAmount);
                         break;
                     default:
                         drink = new JsonDrinkDecorator(drink, ingredient);
@@ -107,14 +118,32 @@ namespace KoffieMachineDomain.Common.Factories
             return drink;
         }
 
+        private IDrink MakeTea(DrinkOptions options)
+        {
+            var blendNames = _teaBlendRepository.BlendNames;
+            Tea tea = new Tea();
+
+            tea.Blend = _teaBlendRepository.GetTeaBlend(options.TeaBlend);
+
+            var drink = new TeaAdapter(tea);
+
+            return drink;
+        }
+
+        #region check methods
         public bool IsExistingDrink(string name)
         {
             return IsRegularCoffee(name) || IsSpecialCoffee(name) || IsTeaBlend(name);
         }
 
+        private bool isHotChocolate(string name)
+        {
+            return name.Contains("Chocolate") || name.Contains("ChocolateDeluxe");
+        }
+
         private bool IsRegularCoffee(string name)
         {
-            return true;
+            return name.Contains("Coffee") || name.Contains("Espresso") || name.Contains("WienerMelange") || name.Contains("Capuccino") || name.Contains("Café au Lait");
         }
 
         private bool IsSpecialCoffee(string name)
@@ -124,8 +153,8 @@ namespace KoffieMachineDomain.Common.Factories
 
         private bool IsTeaBlend(string name)
         {
-            return false;
-        }  
+            return name.Contains("Tea");
+        }
 
         private bool IsDrinkWithSugar(string name)
         {
@@ -135,5 +164,8 @@ namespace KoffieMachineDomain.Common.Factories
         {
             return name.Contains("milk");
         }
+
+        #endregion check methods
+
     }
 }

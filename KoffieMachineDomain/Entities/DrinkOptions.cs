@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KoffieMachineDomain.Config;
 using KoffieMachineDomain.Enums;
 
 namespace KoffieMachineDomain.Entities
@@ -23,5 +24,9 @@ namespace KoffieMachineDomain.Entities
         public Amount MilkAmount { get; set; }
 
         public Amount SugarAmount { get; set; }
+
+        public string TeaBlend { get; set; }
+
+        public JsonCoffee JsonCoffee { get; set; }
     }
 }

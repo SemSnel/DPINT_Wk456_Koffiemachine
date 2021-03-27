@@ -9,8 +9,11 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using KoffieMachineDomain.Common.Factories;
 using KoffieMachineDomain.Common.Interfaces;
+using KoffieMachineDomain.Config;
 using KoffieMachineDomain.Entities;
 using KoffieMachineDomain.Enums;
+using KoffieMachineDomain.Util;
+using TeaAndChocoLibrary;
 
 namespace Dpint_wk456_KoffieMachine.ViewModel
 {
@@ -21,12 +24,23 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
         private DrinkOptions _options;
         private IDrink _selectedDrink;
 
+        private TeaBlendRepository _teaBlendRepository;
+
         public DrinkOptionsViewModel(MainViewModel mainViewModel)
         {
-            _drinkFactory = new DrinkFactory();
-            MainViewModel = mainViewModel;
 
             _options = new DrinkOptions();
+
+            _teaBlendRepository = new TeaBlendRepository();
+            SelectedTeaBlend = TeaBlendNames.First();
+
+            JsonCoffees = new ObservableCollection<JsonCoffee>(JsonCoffeeLoader.GetCoffees());
+            SelectedJsonCoffee = JsonCoffees.First();
+
+            _drinkFactory = new DrinkFactory(_teaBlendRepository);
+
+            MainViewModel = mainViewModel;
+
         }
 
         public  MainViewModel MainViewModel { get; }
@@ -86,5 +100,16 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
             get { return _options.MilkAmount; }
             set { _options.MilkAmount = value; RaisePropertyChanged(() => MilkAmount); }
         }
+
+        public IEnumerable<string> TeaBlendNames => _teaBlendRepository.BlendNames;
+
+        public string SelectedTeaBlend
+        {
+            get { return _options.TeaBlend; } set{ _options.TeaBlend = value; RaisePropertyChanged(() => SelectedTeaBlend); }
+        }
+
+        public ObservableCollection<JsonCoffee> JsonCoffees { get; set; }
+
+        public JsonCoffee SelectedJsonCoffee { get { return _options.JsonCoffee; } set { _options.JsonCoffee = value; RaisePropertyChanged(() => SelectedJsonCoffee); } }
     }
 }

@@ -1,0 +1,59 @@
+{
+  "coffees": [
+    {
+      "Name": "Irish Coffee",
+      "Ingredients": [
+        {
+          "Name": "Whisky",
+          "Price": "0.50"
+        },
+        {
+          "Name": "Sugar",
+          "Price": "0.10"
+        },
+        {
+          "Name": "Whipped cream",
+          "Price": "0.20"
+        }
+      ]
+    },
+    {
+      "Name": "Spanish Coffee",
+      "Ingredients": [
+        {
+          "Name": "Cointreau",
+          "Price": "0.30"
+        },
+        {
+          "Name": "Cognac",
+          "Price": "0.25"
+        },
+        {
+          "Name": "Whipped cream",
+          "Price": "0.20"
+        },
+        {
+          "Name": "Sugar",
+          "Price": "0.10"
+        }
+      ]
+    },
+    {
+      "Name": "Italian Coffee",
+      "Ingredients": [
+        {
+          "Name": "Amaretto",
+          "Price": "0.25"
+        },
+        {
+          "Name": "Sugar",
+          "Price": "0.10"
+        },
+        {
+          "Name": "Whipped cream",
+          "Price": "0.20"
+        }
+      ]
+    }
+  ]
+}

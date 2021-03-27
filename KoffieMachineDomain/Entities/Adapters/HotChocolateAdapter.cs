@@ -4,21 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KoffieMachineDomain.Common.Interfaces;
+using TeaAndChocoLibrary;
 
 namespace KoffieMachineDomain.Entities.Adapters
 {
     public class HotChocolateAdapter : IDrink
     {
-        public string Name => throw new NotImplementedException();
+        public string Name => _hotChocolate.GetNameOfDrink();
+
+        private readonly HotChocolate _hotChocolate;
+
+        public HotChocolateAdapter(HotChocolate hotChocolate)
+        {
+            _hotChocolate = hotChocolate;
+        }
+
 
         public double GetPrice()
         {
-            throw new NotImplementedException();
+            return _hotChocolate.Cost();
         }
 
         public void LogDrinkMaking(ICollection<string> log)
         {
-            throw new NotImplementedException();
+            var steps = _hotChocolate.GetBuildSteps();
+
+            foreach (var step in steps)
+            {
+                log.Add(step);
+            }
         }
     }
 }
