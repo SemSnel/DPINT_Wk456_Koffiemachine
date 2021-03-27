@@ -4,7 +4,22 @@ using System.Text;
 
 namespace TeaAndChocolateLibrary
 {
-    class Tea
+    public class Tea
     {
+        public  float Price { get; set; }
+
+        public int AmountOfSugar { get; set; }
+
+        public TeaBlend Blend { get; set; }
+
+        public void AddSugar()
+        {
+            AmountOfSugar++;
+        }
+
+        public void RemoveSugar()
+        {
+            AmountOfSugar--;
+        }
     }
 }

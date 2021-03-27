@@ -10,5 +10,6 @@ namespace TeaAndChocolateLibrary
         public Color BagColor { get; set; }
 
         public string Name { get; set; }
+
     }
 }

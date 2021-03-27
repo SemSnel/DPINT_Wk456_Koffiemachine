@@ -11,6 +11,7 @@ namespace KoffieMachineDomain.Common.Factories
 {
     public class DrinkFactory : IDrinkFactory
     {
+        //private TeaBlendRepository _teaBlendRepository;
 
         public DrinkFactory()
         {
@@ -124,7 +125,7 @@ namespace KoffieMachineDomain.Common.Factories
         private bool IsTeaBlend(string name)
         {
             return false;
-        }
+        }  
 
         private bool IsDrinkWithSugar(string name)
         {
