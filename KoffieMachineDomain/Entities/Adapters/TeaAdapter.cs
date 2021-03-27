@@ -9,6 +9,8 @@ namespace KoffieMachineDomain.Entities.Adapters
 {
     public class TeaAdapter : IDrink
     {
+        private Tea _tea;
+
         public string Name { get; set; }
 
         public double GetPrice()
