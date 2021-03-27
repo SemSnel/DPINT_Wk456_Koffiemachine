@@ -74,13 +74,13 @@
                 <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Coffee" Style="{StaticResource DrinkButton}">
                     <TextBlock>Coffee</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Coffee" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Coffee + sugar" Style="{StaticResource DrinkButton}">
                     <TextBlock>Coffee + sugar</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Coffee" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Coffee + milk" Style="{StaticResource DrinkButton}">
                     <TextBlock>Coffee + milk</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Coffee" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Coffee + milk + sugar" Style="{StaticResource DrinkButton}">
                     <TextBlock>Coffee + sugar + milk</TextBlock>
                 </Button>
             </StackPanel>
@@ -90,13 +90,13 @@
                 <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Espresso" Style="{StaticResource DrinkButton}">
                     <TextBlock>Espresso</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Espresso" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Espresso + sugar" Style="{StaticResource DrinkButton}">
                     <TextBlock>Espresso + sugar</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Espresso" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Espresso + milk" Style="{StaticResource DrinkButton}">
                     <TextBlock>Espresso + milk</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Espresso" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Espresso + milk + sugar" Style="{StaticResource DrinkButton}">
                     <TextBlock>Espresso + sugar + milk</TextBlock>
                 </Button>
             </StackPanel>

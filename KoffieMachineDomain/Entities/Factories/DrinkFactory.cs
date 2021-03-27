@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using KoffieMachineDomain.Common.Abstractions;
 using KoffieMachineDomain.Common.Interfaces;
+using KoffieMachineDomain.Config;
+using KoffieMachineDomain.Entities;
 using KoffieMachineDomain.Entities.DrinkDecorators;
 using KoffieMachineDomain.Enums;
 
@@ -9,119 +11,128 @@ namespace KoffieMachineDomain.Common.Factories
 {
     public class DrinkFactory : IDrinkFactory
     {
-        private readonly Dictionary<string, Func<IDrink>> _availableDrinks;
 
         public DrinkFactory()
         {
-            _availableDrinks = new Dictionary<string, Func<IDrink>>();
-            AvailableDrinksNames = new List<string>()
-            {
-                "Coffee"
-            };
+
         }
 
-        public Dictionary<string, Func<IDrink>> AvailableDrinks => _availableDrinks;
-
-        public ICollection<string> AvailableDrinksNames { get; private set; }
-
-
-        public IDrink GetDrink(string name, Strength strength, Amount? sugarAmount = null, Amount? milkAmount = null)
+        public IDrink GetDrink(DrinkOptions options)
         {
-            IDrink drink = null;
-
-            switch (name)
+            if (!IsExistingDrink(options.Name))
             {
-                case "Coffee":
-                    return GetCoffee(strength);
-                case "Espresso":
-                    return GetEspresso();
-                case "Capuccino":
-                    return GetCapuccino();
-                case "Wiener Melange":
-                    return GetWienerMelange();
-                case "Caf? au Lait":
-                    return CafeAuLait();
+                return null;
             }
 
-            if (milkAmount != null)
+            if (IsSpecialCoffee(options.Name))
             {
-                drink = AddMilk(drink, (Amount)milkAmount);
+                return MakeJSONCoffee(new JsonCoffee(), options.Strength);
             }
 
-            if (sugarAmount != null)
+            IDrink drink = new DrinkBase() { Name = options.Name };
+
+            if (IsTeaBlend(options.Name))
             {
-                drink = AddSugar(drink, (Amount) sugarAmount);
+
             }
-            
 
-            return drink;
-        }
-
-        #region Make Drink Methods
-        public IDrink GetCoffee(Strength strength)
-        {
-            IDrink drink = new DrinkBase()
+            if (IsRegularCoffee(options.Name))
             {
-                Name = "Coffee"
-            };
+                drink = MakeRegularCoffee(options);
+            }
 
-            drink = AddCoffee(drink, strength);
-            
+            if (IsDrinkWithMilk(options.Name))
+            {
+                drink = new MilkDrinkDecorator(drink, options.MilkAmount);
+            }
 
-            return drink;
-        }
-
-        public IDrink GetEspresso()
-        {
-            IDrink drink = new DrinkBase();
-
-            drink = new Espresso();
+            if (IsDrinkWithSugar(options.Name))
+            {
+                drink = new SugarDrinkDecorator(drink, options.SugarAmount);
+            }
 
             return drink;
         }
 
-        public IDrink GetCapuccino()
+        private IDrink MakeRegularCoffee(DrinkOptions options)
         {
-            IDrink drink = new DrinkBase();
+            var name = options.Name;
+            var strength = options.Strength;
+            IDrink drink = new DrinkBase() { Name = name};
 
-            drink = new Capuccino();
+            if (name.Contains("Espresso"))
+            {
+                strength = Strength.Strong;
+            }
 
-            return drink;
-        }
+            if (name.Contains("Capuccino"))
+            {
+                strength = Strength.Normal;
+            }
 
-        public IDrink GetWienerMelange()
-        {
-            IDrink drink = new DrinkBase();
+            if(name.Contains("WienerMelange"))
+            {
+                strength = Strength.Weak;
+            }
 
-            drink = new WienerMelange();
+            if (name.Contains("Café au Lait"))
+            {
+                return new HalfCoffeeHalfMilkDrinkDecorator(drink);
+            }
 
-            return drink;
-        }
-
-        public IDrink CafeAuLait()
-        {
-            IDrink drink = new DrinkBase();
-
-            drink = new CafeAuLait();
-
-            return drink;
-        }
-
-        public IDrink AddCoffee(IDrink drink, Strength strength)
-        {
             return new CoffeeDecorator(drink, strength);
         }
 
-        public IDrink AddMilk(IDrink drink, Amount amount)
+        private IDrink MakeJSONCoffee(JsonCoffee jsonCoffee, Strength coffeeStrength)
         {
-            return new MilkDrinkDecorator(drink, amount);
+            IDrink drink = new DrinkBase() {Name = jsonCoffee.Name};
+            drink = new CoffeeDecorator(drink, coffeeStrength);
+
+            foreach (JsonIngredient ingredient in jsonCoffee.Ingredients)
+            {
+                switch (ingredient.Name)
+                {
+                    case "Sugar":
+                        drink = new SugarDrinkDecorator(drink, Amount.Normal);
+                        break;
+                    case "Milk":
+                        drink = new MilkDrinkDecorator(drink, Amount.Normal);
+                        break;
+                    default:
+                        drink = new JsonDrinkDecorator(drink, ingredient);
+                        break;
+                }
+            }
+            return drink;
         }
 
-        public IDrink AddSugar(IDrink drink, Amount amount)
+        public bool IsExistingDrink(string name)
         {
-            return new SugarDrinkDecorator(drink, amount);
+            return IsRegularCoffee(name) || IsSpecialCoffee(name) || IsTeaBlend(name);
         }
 
-        #endregion Make Drink Methods
+        private bool IsRegularCoffee(string name)
+        {
+            return true;
+        }
+
+        private bool IsSpecialCoffee(string name)
+        {
+            return name.Contains("JsonCoffee");
+        }
+
+        private bool IsTeaBlend(string name)
+        {
+            return false;
+        }
+
+        private bool IsDrinkWithSugar(string name)
+        {
+            return name.Contains("sugar");
+        }
+        private bool IsDrinkWithMilk(string name)
+        {
+            return name.Contains("milk");
+        }
     }
 }

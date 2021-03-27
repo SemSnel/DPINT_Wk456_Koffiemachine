@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using KoffieMachineDomain.Common.Factories;
 using KoffieMachineDomain.Common.Interfaces;
+using KoffieMachineDomain.Entities;
 using KoffieMachineDomain.Enums;
 
 namespace Dpint_wk456_KoffieMachine.ViewModel
@@ -16,19 +17,16 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
     public class DrinkOptionsViewModel : ViewModelBase
     {
         private IDrinkFactory _drinkFactory;
+
+        private DrinkOptions _options;
         private IDrink _selectedDrink;
-        private Strength _coffeeStrength;
-        private Amount _sugarAmount;
-        private Amount _milkAmount;
 
         public DrinkOptionsViewModel(MainViewModel mainViewModel)
         {
             _drinkFactory = new DrinkFactory();
             MainViewModel = mainViewModel;
 
-            _coffeeStrength = Strength.Normal;
-            _sugarAmount = Amount.Normal;
-            _milkAmount = Amount.Normal;
+            _options = new DrinkOptions();
         }
 
         public  MainViewModel MainViewModel { get; }
@@ -38,13 +36,15 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
 
         private void Drink(string name)
         {
-            if (!_drinkFactory.AvailableDrinksNames.Contains(name))
+            _options.Name = name;
+
+            if (!_drinkFactory.IsExistingDrink(name))
             {
                 LogText.Add("Couldn't make this drink" + name);
                 return;
             }
 
-            _selectedDrink = _drinkFactory.GetDrink(name, _coffeeStrength, _sugarAmount, _milkAmount);
+            _selectedDrink = _drinkFactory.GetDrink(_options);
 
             LogText.Add(_selectedDrink.Name + " " + _selectedDrink.GetPrice());
 
@@ -61,8 +61,8 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
         
         public Strength CoffeeStrength
         {
-            get { return _coffeeStrength; }
-            set { _coffeeStrength = value; RaisePropertyChanged(() => CoffeeStrength); }
+            get { return _options.Strength; }
+            set { _options.Strength = value; RaisePropertyChanged(() => CoffeeStrength); }
         }
 
         internal void MakeDrink()
@@ -77,14 +77,14 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
 
         public Amount SugarAmount
         {
-            get { return _sugarAmount; }
-            set { _sugarAmount = value; RaisePropertyChanged(() => SugarAmount); }
+            get { return _options.SugarAmount; }
+            set { _options.SugarAmount = value; RaisePropertyChanged(() => SugarAmount); }
         }
 
         public Amount MilkAmount
         {
-            get { return _milkAmount; }
-            set { _milkAmount = value; RaisePropertyChanged(() => MilkAmount); }
+            get { return _options.MilkAmount; }
+            set { _options.MilkAmount = value; RaisePropertyChanged(() => MilkAmount); }
         }
     }
 }

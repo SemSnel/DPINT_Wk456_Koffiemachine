@@ -24,6 +24,7 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
         public MainViewModel()
         {
             LogText = new ObservableCollection<string>();
+
             LogText.Add("Starting up...");
             LogText.Add("Done, what would you like to drink?");
 
