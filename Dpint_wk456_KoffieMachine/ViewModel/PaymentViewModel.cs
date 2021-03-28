@@ -81,7 +81,8 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
 
             if (RemainingPriceToPay > 0)
             {
-                _logText.Add(RemainingPriceToPay + " moet je nog betalen");
+                var drinkName = _mainViewModel.DrinkOptionsViewModel.SelectedDrinkName;
+                _logText.Add($"Selected {drinkName}, price: €{RemainingPriceToPay:N2} Euro");
                 return;
             }
 

@@ -19,6 +19,11 @@ namespace KoffieMachineDomain.Entities.DrinkDecorators
 
         public object Amount { get => _amount; }
 
+        public override double GetPrice()
+        {
+            return base.GetPrice() + SugarPrice;
+        }
+
         public override void LogDrinkMaking(ICollection<string> log)
         {
             base.LogDrinkMaking(log);

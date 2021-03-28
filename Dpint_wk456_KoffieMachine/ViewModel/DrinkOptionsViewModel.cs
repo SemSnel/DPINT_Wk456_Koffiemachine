@@ -19,16 +19,14 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
 {
     public class DrinkOptionsViewModel : ViewModelBase
     {
+        private TeaBlendRepository _teaBlendRepository;
         private IDrinkFactory _drinkFactory;
 
         private DrinkOptions _options;
         private IDrink _selectedDrink;
 
-        private TeaBlendRepository _teaBlendRepository;
-
         public DrinkOptionsViewModel(MainViewModel mainViewModel)
         {
-
             _options = new DrinkOptions();
 
             _teaBlendRepository = new TeaBlendRepository();
@@ -59,10 +57,10 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
             }
 
             _selectedDrink = _drinkFactory.GetDrink(_options);
-
-            LogText.Add(_selectedDrink.Name + " " + _selectedDrink.GetPrice());
-
+            
             MainViewModel.PaymentViewModel.RemainingPriceToPay = _selectedDrink.GetPrice();
+
+            LogText.Add($"Selected {_selectedDrink.Name}, price: €{_selectedDrink.GetPrice():N2} Euro");
 
             RaisePropertyChanged(() => SelectedDrinkName);
             RaisePropertyChanged(() => SelectedDrinkPrice);
@@ -77,16 +75,6 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
         {
             get { return _options.Strength; }
             set { _options.Strength = value; RaisePropertyChanged(() => CoffeeStrength); }
-        }
-
-        internal void MakeDrink()
-        {
-            LogText.Add("Aan het maken...");
-            _selectedDrink.LogDrinkMaking(LogText);
-
-            _selectedDrink = null;
-            RaisePropertyChanged(() => SelectedDrinkName);
-            RaisePropertyChanged(() => SelectedDrinkPrice);
         }
 
         public Amount SugarAmount
@@ -111,5 +99,17 @@ namespace Dpint_wk456_KoffieMachine.ViewModel
         public ObservableCollection<JsonCoffee> JsonCoffees { get; set; }
 
         public JsonCoffee SelectedJsonCoffee { get { return _options.JsonCoffee; } set { _options.JsonCoffee = value; RaisePropertyChanged(() => SelectedJsonCoffee); } }
+
+        internal void MakeDrink()
+        {
+            _selectedDrink.LogDrinkMaking(LogText);
+            LogText.Add($"Finished making {SelectedDrinkName}");
+            LogText.Add("------------------");
+
+            _selectedDrink = null;
+            RaisePropertyChanged(() => SelectedDrinkName);
+            RaisePropertyChanged(() => SelectedDrinkPrice);
+        }
+
     }
 }

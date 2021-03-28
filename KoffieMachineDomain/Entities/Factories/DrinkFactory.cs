@@ -22,10 +22,6 @@ namespace KoffieMachineDomain.Common.Factories
 
         public IDrink GetDrink(DrinkOptions options)
         {
-            if (!IsExistingDrink(options.Name))
-            {
-                return null;
-            }
 
             if (IsSpecialCoffee(options.Name))
             {
@@ -39,10 +35,10 @@ namespace KoffieMachineDomain.Common.Factories
                 drink = MakeTea(options);
             }
 
-            if (isHotChocolate(options.Name))
+            if (IsHotChocolate(options.Name))
             {
-                var hotChocolate = new HotChocolate();
-                drink = new HotChocolateAdapter(hotChocolate);
+                drink = MakeHotChocolate(options);
+                
             }
 
             if (IsRegularCoffee(options.Name))
@@ -63,12 +59,28 @@ namespace KoffieMachineDomain.Common.Factories
             return drink;
         }
 
+        private IDrink MakeHotChocolate(DrinkOptions options)
+        {
+            var hotChocolate = new HotChocolate();
+
+            var drink = new HotChocolateAdapter(hotChocolate);
+
+            if (!options.Name.Equals("Chocolate Deluxe"))
+            {
+                return drink;
+            }
+
+            hotChocolate.MakeDeluxe();
+
+            return drink;
+        }
 
         private IDrink MakeRegularCoffee(DrinkOptions options)
         {
             var name = options.Name;
             var strength = options.Strength;
-            IDrink drink = new DrinkBase() { Name = name};
+
+            IDrink drink = new DrinkBase() { Name = name };
 
             if (name.Contains("Espresso"))
             {
@@ -133,12 +145,12 @@ namespace KoffieMachineDomain.Common.Factories
         #region check methods
         public bool IsExistingDrink(string name)
         {
-            return IsRegularCoffee(name) || IsSpecialCoffee(name) || IsTeaBlend(name);
+            return IsRegularCoffee(name) || IsSpecialCoffee(name) || IsTeaBlend(name) || IsHotChocolate(name);
         }
 
-        private bool isHotChocolate(string name)
+        private bool IsHotChocolate(string name)
         {
-            return name.Contains("Chocolate") || name.Contains("ChocolateDeluxe");
+            return name.Contains("Chocolate") || name.Contains("Chocolate Deluxe");
         }
 
         private bool IsRegularCoffee(string name)

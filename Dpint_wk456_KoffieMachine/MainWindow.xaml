@@ -106,10 +106,10 @@
                 <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Capuccino" Style="{StaticResource DrinkButton}">
                     <TextBlock>Capuccino</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Capuccino" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Capuccino + sugar" Style="{StaticResource DrinkButton}">
                     <TextBlock>Capuccino + sugar</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Wiener Melange" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="WienerMelange" Style="{StaticResource DrinkButton}">
                     <TextBlock>Wiener Melange</TextBlock>
                 </Button>
                 <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Café au Lait" Style="{StaticResource DrinkButton}">
@@ -132,7 +132,7 @@
                 <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Tea" Style="{StaticResource DrinkButton}">
                     <TextBlock>Tea</TextBlock>
                 </Button>
-                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Tea" Style="{StaticResource DrinkButton}">
+                <Button Command="{Binding DrinkOptionsViewModel.DrinkCommand}" CommandParameter="Tea + sugar" Style="{StaticResource DrinkButton}">
                     <TextBlock>Tea + sugar</TextBlock>
                 </Button>
                 <StackPanel HorizontalAlignment="Center">

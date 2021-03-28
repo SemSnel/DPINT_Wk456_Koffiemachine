@@ -8,7 +8,6 @@ namespace KoffieMachineDomain.Entities.Payment
 {
     public class CardPayment : IPayment
     {
-        private double remainingPriceToPay;
         public Dictionary<string, double> CashOnCards { get; }
 
         public ObservableCollection<string> _logText;
@@ -30,20 +29,28 @@ namespace KoffieMachineDomain.Entities.Payment
 
         public string SelectedPaymentCardUserName { get; set; }
 
+        public ObservableCollection<string> LogText => _logText;
+
         public double Pay(double remainingPriceToPay)
         {
             var insertedMoney = CashOnCards[SelectedPaymentCardUserName];
 
             if (remainingPriceToPay > insertedMoney)
             {
+                remainingPriceToPay -= insertedMoney;
+
+                LogText.Add($"Inserted €{insertedMoney:N2} Euro, Remaining: €{remainingPriceToPay:N2} Euro.");
+
                 CashOnCards[SelectedPaymentCardUserName] = 0;
 
-                return remainingPriceToPay -= insertedMoney;
+                return remainingPriceToPay;
             }
 
             CashOnCards[SelectedPaymentCardUserName] -= remainingPriceToPay;
 
             remainingPriceToPay = 0;
+
+            LogText.Add($"Inserted €{insertedMoney:N2} Euro, Remaining: €{remainingPriceToPay:N2} Euro.");
 
             return remainingPriceToPay;
         }

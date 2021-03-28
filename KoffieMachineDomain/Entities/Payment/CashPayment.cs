@@ -30,19 +30,27 @@ namespace KoffieMachineDomain.Entities.Payment
             return retrievedMoney;
         }
 
+        public ObservableCollection<string> LogText => _logText;
+
 
         public double Pay(double remainingPriceToPay)
         {
             if (remainingPriceToPay > _insertedMoney)
             {
+                remainingPriceToPay -= _insertedMoney;
+
+                LogText.Add($"Inserted €{_insertedMoney:N2} Euro, Remaining: €{remainingPriceToPay:N2} Euro.");
+
                 _insertedMoney = 0;
 
-                return remainingPriceToPay -= _insertedMoney;
+                return remainingPriceToPay;
             }
 
-            _insertedMoney -= remainingPriceToPay;
-
             remainingPriceToPay = 0;
+
+            LogText.Add($"Inserted €{_insertedMoney:N2} Euro, Remaining: €{remainingPriceToPay:N2} Euro.");
+
+            _insertedMoney -= remainingPriceToPay;
 
             return remainingPriceToPay;
         }
